@@ -11,7 +11,7 @@ import vsc
 
 class VSCUpdater(object):
 
-    def on_get(self, req: falcon.Request, resp: falcon.Response, platform, buildquality, commitid):
+    def on_get(self, req: falcon.Request, resp: falcon.Response, platform: str, buildquality: str, commitid: str):
         updatedir = os.path.join(vsc.ARTIFACTS_INSTALLERS, platform, buildquality)
         if not os.path.exists(updatedir):
             log.warning(f'Update build directory does not exist at {updatedir}. Check sync or sync configuration.')
@@ -49,7 +49,7 @@ class VSCUpdater(object):
 
 class VSCBinaryFromCommitId(object):
 
-    def on_get(self, req: falcon.Request, resp: falcon.Response, commitid, platform, buildquality):
+    def on_get(self, req: falcon.Request, resp: falcon.Response, commitid: str, platform: str, buildquality: str):
         updatedir = os.path.join(vsc.ARTIFACTS_INSTALLERS, platform, buildquality)
         if not os.path.exists(updatedir):
             log.warning(f'Update build directory does not exist at {updatedir}. Check sync or sync configuration.')
