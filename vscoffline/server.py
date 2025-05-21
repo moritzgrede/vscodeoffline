@@ -11,7 +11,7 @@ import vsc
 
 class VSCUpdater(object):
 
-    def on_get(self, req, resp, platform, buildquality, commitid):
+    def on_get(self, req: falcon.Request, resp: falcon.Response, platform, buildquality, commitid):
         updatedir = os.path.join(vsc.ARTIFACTS_INSTALLERS, platform, buildquality)
         if not os.path.exists(updatedir):
             log.warning(f'Update build directory does not exist at {updatedir}. Check sync or sync configuration.')
@@ -49,7 +49,7 @@ class VSCUpdater(object):
 
 class VSCBinaryFromCommitId(object):
 
-    def on_get(self, req, resp, commitid, platform, buildquality):
+    def on_get(self, req: falcon.Request, resp: falcon.Response, commitid, platform, buildquality):
         updatedir = os.path.join(vsc.ARTIFACTS_INSTALLERS, platform, buildquality)
         if not os.path.exists(updatedir):
             log.warning(f'Update build directory does not exist at {updatedir}. Check sync or sync configuration.')
@@ -80,7 +80,7 @@ class VSCBinaryFromCommitId(object):
 
 class VSCRecommendations(object):
 
-    def on_get(self, req, resp):
+    def on_get(self, req: falcon.Request, resp: falcon.Response):
         if not os.path.exists(vsc.ARTIFACT_RECOMMENDATION):
             resp.status = falcon.HTTP_404
             return
@@ -91,7 +91,7 @@ class VSCRecommendations(object):
 
 class VSCMalicious(object):
 
-    def on_get(self, req, resp):
+    def on_get(self, req: falcon.Request, resp: falcon.Response):
         if not os.path.exists(vsc.ARTIFACT_MALICIOUS):
             resp.status = falcon.HTTP_404
             return
@@ -195,7 +195,7 @@ class VSCGallery(object):
             log.info(f'Checking for updates in {vsc.Utility.seconds_to_human_time(self.interval)}')
             time.sleep(self.interval)
 
-    def on_post(self, req, resp):
+    def on_post(self, req: falcon.Request, resp: falcon.Response):
         if 'filters' not in req.media or 'criteria' not in req.media['filters'][0] or 'flags' not in req.media:
             log.warning(f'Post missing critical components. Raw post {req.media}')
             resp.status = falcon.HTTP_404
@@ -350,7 +350,7 @@ class VSCIndex(object):
     def __init__(self):
         pass
 
-    def on_get(self, req, resp):
+    def on_get(self, req: falcon.Request, resp: falcon.Response):
         resp.content_type = 'text/html'
         with open('/opt/vscoffline/vscgallery/content/index.html', 'r') as f:
             resp.text = f.read()
@@ -361,7 +361,7 @@ class VSCDirectoryBrowse(object):
     def __init__(self, root):
         self.root = root
 
-    def on_get(self, req, resp):
+    def on_get(self, req: falcon.Request, resp: falcon.Response):
         requested_path = os.path.join(self.root, req.get_param('path', required=True))
         # Check the path requested
         if os.path.commonprefix((os.path.realpath(requested_path), self.root)) != self.root:
