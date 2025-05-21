@@ -20,7 +20,7 @@ class VSCUpdater(object):
         latestpath = os.path.join(updatedir, 'latest.json')
         latest = vsc.Utility.load_json(latestpath)
         if not latest:
-            resp.content = 'Unable to load latest.json'
+            resp.body = 'Unable to load latest.json'
             log.warning(f'Unable to load latest.json for platform {platform} and buildquality {buildquality}')
             resp.status = falcon.HTTP_500
             return
@@ -32,12 +32,12 @@ class VSCUpdater(object):
         name = latest['name']
         updatepath = vsc.Utility.first_file(updatedir, f'vscode-{name}.*')
         if not updatepath:
-            resp.content = 'Unable to find update payload'
+            resp.body = 'Unable to find update payload'
             log.warning(f'Unable to find update payload from {updatedir}/vscode-{name}.*')
             resp.status = falcon.HTTP_404
             return
         if not vsc.Utility.hash_file_and_check(updatepath, latest['sha256hash']):
-            resp.content = 'Update payload hash mismatch'
+            resp.body = 'Update payload hash mismatch'
             log.warning(f'Update payload hash mismatch {updatepath}')
             resp.status = falcon.HTTP_403
             return
@@ -58,20 +58,20 @@ class VSCBinaryFromCommitId(object):
         jsonpath = os.path.join(updatedir, f'{commitid}.json')
         updatejson = vsc.Utility.load_json(jsonpath)
         if not updatejson:
-            resp.content = f'Unable to load {jsonpath}'
-            log.warning(resp.content)
+            resp.body = f'Unable to load {jsonpath}'
+            log.warning(resp.body)
             resp.status = falcon.HTTP_500
             return
         name = updatejson['name']
         updatepath = vsc.Utility.first_file(updatedir, f'vscode-{name}.*')
         if not updatepath:
-            resp.content = f'Unable to find update payload from {updatedir}/vscode-{name}.*'
-            log.warning(resp.content)
+            resp.body = f'Unable to find update payload from {updatedir}/vscode-{name}.*'
+            log.warning(resp.body)
             resp.status = falcon.HTTP_404
             return
         if not vsc.Utility.hash_file_and_check(updatepath, updatejson['sha256hash']):
-            resp.content = f'Update payload hash mismatch {updatepath}'
-            log.warning(resp.content)
+            resp.body = f'Update payload hash mismatch {updatepath}'
+            log.warning(resp.body)
             resp.status = falcon.HTTP_403
             return
         # Url for the client to fetch the update
