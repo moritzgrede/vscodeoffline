@@ -1,6 +1,6 @@
 import os, sys, time, glob
 import falcon
-from distutils.version import LooseVersion
+from distutils.version import LooseVersion # type: ignore
 import logging as log
 from wsgiref import simple_server
 from watchdog.observers.polling import PollingObserver

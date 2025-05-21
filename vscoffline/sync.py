@@ -14,9 +14,9 @@ import datetime
 from typing import List
 from platform import release
 import logging as log
-from pytimeparse.timeparse import timeparse
+from pytimeparse.timeparse import timeparse # type: ignore
 import vsc
-from distutils.dir_util import create_tree
+from distutils.dir_util import create_tree # type: ignore
 from requests.adapters import HTTPAdapter, Retry
 from packaging.version import Version
 
