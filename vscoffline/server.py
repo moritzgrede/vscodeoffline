@@ -1,4 +1,4 @@
-import os, sys, time, json, glob
+import os, sys, time, glob
 import falcon
 from distutils.version import LooseVersion
 import logging as log
