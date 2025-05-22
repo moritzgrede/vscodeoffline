@@ -4,7 +4,7 @@ import json
 import os
 import pathlib
 from enum import IntFlag
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, overload
 import logging as log
 
 PLATFORMS = ["win32-x64", "linux", "linux-deb", "linux-rpm", "darwin", "darwin-arm64", "darwin-universal", "linux-snap", "server-linux", "server-linux-legacy", "cli-alpine"]
@@ -114,18 +114,20 @@ class Utility:
                 h.update(chunk)
         return expectedchecksum == h.hexdigest()
 
+    @overload
     @staticmethod
-    def load_json(filepath: Union[str, pathlib.Path]) -> Union[List[Any], Dict[str, Any]]:
-        if isinstance(filepath, str):
-            filepath: pathlib.Path = pathlib.Path(filepath)
+    def load_json(filepath: str) -> Union[List[Any], Dict[str, Any]]:
+        return Utility.load_json(pathlib.Path(filepath))
 
-        result = []
+    @overload
+    @staticmethod
+    def load_json(filepath: pathlib.Path) -> Union[List[Any], Dict[str, Any]]:
         if not filepath.exists():
             log.debug(f"Unable to load json from {filepath.absolute()}. Does not exist.")
-            return result
+            return []
         elif filepath.is_dir():
             log.debug(f"Cannot load json at path {filepath.absolute()}. It is a directory")
-            return result
+            return []
 
         with open(filepath, "r", encoding="utf-8-sig") as fp:
             try:
@@ -139,6 +141,10 @@ class Utility:
                 log.debug(f"UnicodeDecodeError while processing {filepath.absolute()} \n error: {str(err)}")
                 return []
         return result
+
+    @staticmethod
+    def load_json(filepath: Any) -> Union[List[Any], Dict[str, Any]]:
+        return []
 
     @staticmethod
     def write_json(filepath: Union[str, pathlib.Path], content: Dict[str, Any]) -> None:
